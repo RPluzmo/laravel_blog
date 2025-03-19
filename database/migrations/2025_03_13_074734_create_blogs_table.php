@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('blogs', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('blogs', function (Blueprint $table) {
+            $table->text('content')->after('title');
         });
     }
 
