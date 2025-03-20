@@ -1,8 +1,8 @@
 <x-layout>
     <x-slot:title>
-       Rediģēt uzdevumu
+       Rediģēt blogu
     </x-slot:title>
-    <h1>Redidždždžģēt uzdevumu</h1>
+    <h1>Redidždždžģēt blogu</h1>
     <form action="/blogs/{{ $blog->id }}" method="POST">
         @csrf
         @method('PUT')

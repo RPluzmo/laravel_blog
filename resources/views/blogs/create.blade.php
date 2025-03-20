@@ -1,9 +1,9 @@
 
 <x-layout>
     <x-slot:title>
-        Izveidot uzdevumu
+        Izveidot blogu
     </x-slot:title>
-    <h1>Izveidot uzdevumu</h1>
+    <h1>Izveidot blogu</h1>
     <form action="/blogs" method="POST">
         @csrf
         <input name="content" value="{{ old('content') }}"/>
