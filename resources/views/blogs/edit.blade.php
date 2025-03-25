@@ -8,10 +8,17 @@
         @method('PUT')
         <label>Saturs:
             <input name="content" type="text" value="{{ old('content', $blog->content) }}">
-        </label>
         @error("content")
             <p >{{ $message }}</p>
         @enderror
+        </label>
+        <label>Izvēlies kategoiju
+            <select name="category_id" id="category_id">
+                <option value="">Nav kategorijas</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                @endforeach
+            </select>
         </label>
         <button>Saglabāt</button>
     </form>
