@@ -26,7 +26,7 @@ class BlogController extends Controller
 
     public function store(Request $request) {
         $validated = $request->validate([
-            "content" => ["required", "max:1000"],
+            "content" => ["required", "max:50"],
             "category_id" => ["nullable", "exists:categories,id"] // Pārliecinās, ka kategorija eksistē
         ]);
 
@@ -47,7 +47,7 @@ class BlogController extends Controller
 
     public function update(Request $request, Blog $blog) {
         $validated = $request->validate([
-            "content" => ["required", "max:1000"],
+            "content" => ["required", "max:50"],
             "category_id" => ["nullable", "exists:categories,id"]  // Atļauj tukšu vai esošu kategoriju
         ]);
     
@@ -65,5 +65,17 @@ class BlogController extends Controller
     public function destroy(Blog $blog) {
         $blog->delete();
         return redirect("/blogs");
+    }
+
+    public function storeComment(Request $request, Blog $blog){
+        $validated = $request->validate([
+            'comment' => 'required|max:50',
+        ]);
+
+        $blog->comments()->create([
+            'comment' => $validated['comment'],
+        ]);
+
+        return redirect()->back()->with('success', 'Komentārs pievienots!');
     }
 }

@@ -12,4 +12,9 @@ class Blog extends Model
     {
         return $this->belongsTo(Category::class); // Saista ar Category modeli, izmantojot category_id
     }
+
+    public function comments()
+{
+    return $this->hasMany(Comment::class);
+}
 }

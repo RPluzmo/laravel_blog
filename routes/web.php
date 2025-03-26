@@ -31,3 +31,6 @@ Route::get('/blogs', [BlogController::class, 'index']);
 
 Route::get('/blogs/{blog}', [BlogController::class, 'show']);
     Route::get('/categories/{category}', [CategoryController::class, 'show']);
+
+
+Route::post('/blogs/{blog}/comments', [BlogController::class, 'storeComment'])->name('blogs.comments.store');
