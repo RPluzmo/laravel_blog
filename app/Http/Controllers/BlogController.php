@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Blog;
 use App\Models\Category;
+
 class BlogController extends Controller
 {
     public function index()
@@ -25,13 +26,17 @@ class BlogController extends Controller
 
     public function store(Request $request) {
         $validated = $request->validate([
-            "content" => ["required", "max:1000"]
+            "content" => ["required", "max:1000"],
+            "category_id" => ["nullable", "exists:categories,id"] // Pārliecinās, ka kategorija eksistē
         ]);
 
+        $category_id = $request->category_id ?? Category::where('category_name', 'Nav kategorijas')->value('id');
+        
         Blog::create([
             "content" => $request->content,
-            "category_id" => $request->category_id,
+            "category_id" => $category_id,
         ]);
+        
         return redirect("/blogs");
     }
 
@@ -43,18 +48,20 @@ class BlogController extends Controller
     public function update(Request $request, Blog $blog) {
         $validated = $request->validate([
             "content" => ["required", "max:1000"],
-            "category_id" => ["nullable"]  // Atļauj tukšu kategoriju
+            "category_id" => ["nullable", "exists:categories,id"]  // Atļauj tukšu vai esošu kategoriju
         ]);
     
-        // Ja kategorija nav izvēlēta, piešķir "Nav kategorijas" kategoriju
-        $category_id = $validated['category_id'] ?? Category::where('category_name', 'Nav kategorijas')->first()->id;
+        // Ja kategorija nav izvēlēta, piešķir "Nav kategorijas" ID vai null, ja nav atrodams
+        $category_id = $validated['category_id'] ?? Category::where('category_name', 'Nav kategorijas')->value('id');
     
-        // Atjauno bloga ierakstu ar jauno kategoriju
-        $blog->content = $validated["content"];
-        $blog->category_id = $category_id;  // Pievieno pareizo kategorijas ID
-        $blog->save();
-        return view("blogs.show", compact("blog"));
+        $blog->update([
+            "content" => $validated["content"],
+            "category_id" => $category_id,
+        ]);
+    
+        return redirect("/blogs/{$blog->id}")->with('success', 'Bloga ieraksts atjaunināts!');
     }
+
     public function destroy(Blog $blog) {
         $blog->delete();
         return redirect("/blogs");
