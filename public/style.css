@@ -1,3 +1,18 @@
+.content-text {
+    word-wrap: break-word; /* Pārnes vārdus, ja tie ir pārāk gari */
+    overflow-wrap: break-word; /* Drošāks variants jaunākām pārlūkprogrammām */
+    white-space: pre-wrap; /* Saglabā formatējumu un aplauž rindas */
+    max-width: 100%; /* Ierobežo elementa platumu */
+}
+textarea {
+    
+    max-width: 80%; /* Maksimālais platums līdz 80% no konteineru platuma */
+    max-height: 20em; /* Maksimālais augstums, atkarīgs no fonta */
+    resize: both; /* Atļauj mainīt gan platumu, gan augstumu */
+    box-sizing: border-box; /* Ietver padding un border izmēros */
+}
+
 header ul {display: flex; gap:20px; list-style-type: none;}
+li{margin-bottom: 10px;}
 ul{list-style-type: none;}
 body{background:lavenderblush;};

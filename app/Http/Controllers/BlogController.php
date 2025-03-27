@@ -20,21 +20,23 @@ class BlogController extends Controller
     }
 
     public function create() {
-        $categories = Category::all();  // Iegūst visas kategorijas
+        $categories = Category::all(); 
         return view("blogs.create", compact("categories"));
     }
 
     public function store(Request $request) {
         $validated = $request->validate([
-            "content" => ["required", "max:50"],
+            "title" => ["required", "max:50"],
+            "content" => ["required", "max:500"],
             "category_id" => ["nullable", "exists:categories,id"] // Pārliecinās, ka kategorija eksistē
         ]);
 
         $category_id = $request->category_id ?? Category::where('category_name', 'Nav kategorijas')->value('id');
         
         Blog::create([
+            "title" => $request->title,
             "content" => $request->content,
-            "category_id" => $category_id,
+            "category_id" => $category_id
         ]);
         
         return redirect("/blogs");
@@ -47,19 +49,23 @@ class BlogController extends Controller
 
     public function update(Request $request, Blog $blog) {
         $validated = $request->validate([
-            "content" => ["required", "max:50"],
-            "category_id" => ["nullable", "exists:categories,id"]  // Atļauj tukšu vai esošu kategoriju
+            "title" => ["required", "max:50"],
+            "content" => ["required", "max:500"],
+            "category_id" => ["nullable", "exists:categories,id"],
+            "author" => ["required", "max:50"],  // Atļauj tukšu vai esošu kategoriju
         ]);
     
         // Ja kategorija nav izvēlēta, piešķir "Nav kategorijas" ID vai null, ja nav atrodams
         $category_id = $validated['category_id'] ?? Category::where('category_name', 'Nav kategorijas')->value('id');
     
         $blog->update([
+            "title" => $validated["title"],
             "content" => $validated["content"],
             "category_id" => $category_id,
+            "author" => $validated["content"],
         ]);
     
-        return redirect("/blogs/{$blog->id}")->with('success', 'Bloga ieraksts atjaunināts!');
+        return redirect("/blogs/{$blog->id}");
     }
 
     public function destroy(Blog $blog) {
@@ -69,13 +75,15 @@ class BlogController extends Controller
 
     public function storeComment(Request $request, Blog $blog){
         $validated = $request->validate([
-            'comment' => 'required|max:50',
+            'comment' => 'required|max:500',
+            'author' => 'required|max:50'
         ]);
 
         $blog->comments()->create([
             'comment' => $validated['comment'],
+            'author' => $validated['author']
         ]);
 
-        return redirect()->back()->with('success', 'Komentārs pievienots!');
+        return redirect()->back();
     }
 }

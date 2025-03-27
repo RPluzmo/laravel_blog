@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('blog_id')->constrained()->onDelete('cascade'); // Saista ar bloga ID
+            $table->string("author", 50);
             $table->text('comment');
             $table->timestamps();
         });
